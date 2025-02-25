@@ -222,7 +222,7 @@ public class Calculator extends JFrame {
                 return leftValue * rightValue;
             case "/":
                 if (rightValue == 0) {
-                    throw new ArithmeticException("Diviziune cu 0");
+                    throw new ArithmeticException("Impartire la 0");
                 }
                 return leftValue / rightValue;
             default:
