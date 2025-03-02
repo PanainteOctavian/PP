@@ -15,13 +15,13 @@ class TreeNode { // pt arborele de expresii
 }
 
 public class Calculator extends JFrame {
-    
+
     JButton digits[] = { // 10 cifre
             new JButton(" 0 "), new JButton(" 1 "), new JButton(" 2 "), new JButton(" 3 "), new JButton(" 4 "),
             new JButton(" 5 "), new JButton(" 6 "), new JButton(" 7 "), new JButton(" 8 "), new JButton(" 9 ")
     };
 
-    
+
     JButton operators[] = { // 8 operatori
             new JButton(" + "), new JButton(" - "), new JButton(" * "), new JButton(" / "),
             new JButton(" = "), new JButton(" C "), new JButton(" ( "), new JButton(" ) ")
@@ -69,7 +69,7 @@ public class Calculator extends JFrame {
             });
         }
 
-        
+
         for (int i = 0; i < 8; i++) { // 8 operatori
             int finalI = i;
             operators[i].addActionListener(new ActionListener() {
@@ -82,7 +82,7 @@ public class Calculator extends JFrame {
                             double result = evaluateExpression(expression);    // fct pt evaluarea expresiei postfixate
                             area.setText("= " + result);  // afiseaza rezultatul
                         } catch (Exception ex) {
-                            area.setText("Probleme");
+                            area.setText("Probleme"); // nu suporta numere negative direct in expresii si nu gestioneaza erori de sintaxa
                         }
                     }
                     else if (finalI == 6) {  // "("
@@ -92,7 +92,7 @@ public class Calculator extends JFrame {
                         area.append(")");
                     }
                     else if (finalI == 5) {  // "C"
-                        area.setText(""); // sterge continutul 
+                        area.setText(""); // sterge continutul
                     }
                     else {
                         area.append(oper_values[finalI]); // adauga operatorul
@@ -112,19 +112,19 @@ public class Calculator extends JFrame {
         StringBuilder postfix = new StringBuilder();    // construieste expresia postfix
         Stack<Character> operators = new Stack<>();    // stiva pentru operatori si paranteze
         StringBuilder currentNum = new StringBuilder();  // construieste numerele cu mai multe cifre
-        
+
         for (int i = 0; i < infix.length(); i++) {
             char c = infix.charAt(i);
 
             if (Character.isDigit(c)) { // daca e cifra -> il adaug la currentNum
                 currentNum.append(c);
-            } else {        
+            } else {
                 if (currentNum.length() > 0) { // currentNum nu este gol -> adaug numarul la postfix
                     postfix.append(currentNum.toString()).append(" ");  // spatiu pentru delimitare
                     currentNum.setLength(0);  // reset currentNum
                 }
 
-            if (c == '+' || c == '-' || c == '*' || c == '/') { // operator
+                if (c == '+' || c == '-' || c == '*' || c == '/') { // operator
                     while (!operators.isEmpty() && precedence(operators.peek()) >= precedence(c)) { // scot operatorii cu prioritate mai mare sau egala din stiva
                         postfix.append(operators.pop()).append(" ");
                     }
@@ -145,7 +145,7 @@ public class Calculator extends JFrame {
         if (currentNum.length() > 0) { // mai exista un numar -> adaug la expresia postfix
             postfix.append(currentNum.toString()).append(" ");
         }
-        
+
         while (!operators.isEmpty()) {  // scot toti operatorii ramasi din stiva
             postfix.append(operators.pop()).append(" ");
         }
@@ -162,7 +162,7 @@ public class Calculator extends JFrame {
         return -1;
     }
 
-    
+
     private double evaluatePostfix(String postfix) { // evaluare expresie postfixata
         String[] tokens = postfix.split("\\s+");  // se imparte expresia in tokenuri (numere si operatori), folosind split("\\s+"), care separa expresia după spatii
         Stack<TreeNode> stack = new Stack<>(); // stiva pentru a construi arborele de expresii
