@@ -3,8 +3,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.util.Stack;
 
-// pt arborele de expresii
-class TreeNode {
+
+class TreeNode { // pt arborele de expresii
     String value;
     TreeNode left, right;
 
@@ -15,19 +15,21 @@ class TreeNode {
 }
 
 public class Calculator extends JFrame {
-    JButton digits[] = {
+    
+    JButton digits[] = { // 10 cifre
             new JButton(" 0 "), new JButton(" 1 "), new JButton(" 2 "), new JButton(" 3 "), new JButton(" 4 "),
             new JButton(" 5 "), new JButton(" 6 "), new JButton(" 7 "), new JButton(" 8 "), new JButton(" 9 ")
     };
 
-    JButton operators[] = {
+    
+    JButton operators[] = { // 8 operatori
             new JButton(" + "), new JButton(" - "), new JButton(" * "), new JButton(" / "),
             new JButton(" = "), new JButton(" C "), new JButton(" ( "), new JButton(" ) ")
     };
 
     String oper_values[] = {"+", "-", "*", "/", "=", "", "(", ")"};
 
-    JTextArea area = new JTextArea(3, 5);
+    JTextArea area = new JTextArea(3, 5); // folosit pt afișarea expresiilor introduse și a rezultatelor
 
     public static void main(String[] args) {
         Calculator calculator = new Calculator();
@@ -56,7 +58,8 @@ public class Calculator extends JFrame {
         area.setWrapStyleWord(true);
         area.setEditable(false);
 
-        for (int i = 0; i < 10; i++) {
+        // fiecare buton are un ActionListener asociat care adaugă cifra sau operatorul corespunzător în JTextArea
+        for (int i = 0; i < 10; i++) { // 10 cifre
             int finalI = i;
             digits[i].addActionListener(new ActionListener() {
                 @Override
@@ -66,16 +69,17 @@ public class Calculator extends JFrame {
             });
         }
 
-        for (int i = 0; i < 8; i++) {
+        
+        for (int i = 0; i < 8; i++) { // 8 operatori
             int finalI = i;
             operators[i].addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     String text = area.getText();
-                    if (finalI == 4) {  // "="
+                    if (finalI == 4) {  // "=" evalueaza expresia
                         try {
                             String expression = area.getText();
-                            double result = evaluateExpression(expression);
+                            double result = evaluateExpression(expression);    // fct pt evaluarea expresiei postfixate
                             area.setText("= " + result);  // afiseaza rezultatul
                         } catch (Exception ex) {
                             area.setText("Probleme");
@@ -88,58 +92,49 @@ public class Calculator extends JFrame {
                         area.append(")");
                     }
                     else if (finalI == 5) {  // "C"
-                        area.setText("");
+                        area.setText(""); // sterge continutul 
                     }
                     else {
-                        area.append(oper_values[finalI]);
+                        area.append(oper_values[finalI]); // adauga operatorul
                     }
                 }
             });
         }
     }
 
-    // fct care evalueaza expresia postfixata
     private double evaluateExpression(String expression) {
-        // infix -> postfix
-        String postfix = infixToPostfix(expression);
+        String postfix = infixToPostfix(expression); // fct care face conversia unei expresii infixate in una postfixata, deoarece e mai usor sa evaluez o expresie postfixata
 
-        // evaluare expresie postfix
-        return evaluatePostfix(postfix);
+        return evaluatePostfix(postfix);    // fct care evalueaza expresie postfix
     }
 
-    // infix -> postfix
     private String infixToPostfix(String infix) {
-        StringBuilder postfix = new StringBuilder();
-        Stack<Character> operators = new Stack<>();
-        StringBuilder currentNum = new StringBuilder();  // pt a construi numerele
-
+        StringBuilder postfix = new StringBuilder();    // construieste expresia postfix
+        Stack<Character> operators = new Stack<>();    // stiva pentru operatori si paranteze
+        StringBuilder currentNum = new StringBuilder();  // construieste numerele cu mai multe cifre
+        
         for (int i = 0; i < infix.length(); i++) {
             char c = infix.charAt(i);
 
-            // numar -> il adaugam la currentNum
-            if (Character.isDigit(c)) {
+            if (Character.isDigit(c)) { // daca e cifra -> il adaug la currentNum
                 currentNum.append(c);
-            } else {
-                // currentNum nu este gol -> adaugam numarul la postfix
-                if (currentNum.length() > 0) {
+            } else {        
+                if (currentNum.length() > 0) { // currentNum nu este gol -> adaug numarul la postfix
                     postfix.append(currentNum.toString()).append(" ");  // spatiu pentru delimitare
                     currentNum.setLength(0);  // reset currentNum
                 }
 
-                // operator
-                if (c == '+' || c == '-' || c == '*' || c == '/') {
-                    while (!operators.isEmpty() && precedence(operators.peek()) >= precedence(c)) {
+            if (c == '+' || c == '-' || c == '*' || c == '/') { // operator
+                    while (!operators.isEmpty() && precedence(operators.peek()) >= precedence(c)) { // scot operatorii cu prioritate mai mare sau egala din stiva
                         postfix.append(operators.pop()).append(" ");
                     }
+                    operators.push(c);    // adaug operatorul curent in stiva
+                }
+                else if (c == '(') {  // paranteza deschisa
                     operators.push(c);
                 }
-                // paranteza deschisa
-                else if (c == '(') {
-                    operators.push(c);
-                }
-                // paranteza inchisa
-                else if (c == ')') {
-                    while (!operators.isEmpty() && operators.peek() != '(') {
+                else if (c == ')') {  // paranteza inchisa
+                    while (!operators.isEmpty() && operators.peek() != '(') { // scot toti operatorii pana la paranteza deschisa
                         postfix.append(operators.pop()).append(" ");
                     }
                     operators.pop();  // scot '(' din stiva
@@ -147,21 +142,18 @@ public class Calculator extends JFrame {
             }
         }
 
-        // mai exista un numar -> adaug la postfix
-        if (currentNum.length() > 0) {
+        if (currentNum.length() > 0) { // mai exista un numar -> adaug la expresia postfix
             postfix.append(currentNum.toString()).append(" ");
         }
-
-        // scot toti operatorii ramasi din stiva
-        while (!operators.isEmpty()) {
+        
+        while (!operators.isEmpty()) {  // scot toti operatorii ramasi din stiva
             postfix.append(operators.pop()).append(" ");
         }
 
         return postfix.toString();
     }
 
-    // importanta operatorilor
-    private int precedence(char operator) {
+    private int precedence(char operator) { // importanta operatorilor
         if (operator == '+' || operator == '-') {
             return 1;
         } else if (operator == '*' || operator == '/') {
@@ -170,42 +162,40 @@ public class Calculator extends JFrame {
         return -1;
     }
 
-    // evaluare expresie postfixata
-    private double evaluatePostfix(String postfix) {
-        String[] tokens = postfix.split("\\s+");  // impart expr in tokenuri (numere si operatori)
-        Stack<TreeNode> stack = new Stack<>();
+    
+    private double evaluatePostfix(String postfix) { // evaluare expresie postfixata
+        String[] tokens = postfix.split("\\s+");  // se imparte expresia in tokenuri (numere si operatori), folosind split("\\s+"), care separa expresia după spatii
+        Stack<TreeNode> stack = new Stack<>(); // stiva pentru a construi arborele de expresii
 
         for (String token : tokens) {
             if (token.matches("\\d+")) {  // numar
-                stack.push(new TreeNode(token));  // creez un nod cu val numarului
+                stack.push(new TreeNode(token));  // creez un nod cu val numarului in stiva
             }
             else if (token.matches("[+\\-*/]")) {  // operator
-                TreeNode rightNode = stack.pop();  // nod drt
-                TreeNode leftNode = stack.pop();  // nod stg
+                TreeNode rightNode = stack.pop();  // scot nod drt, al doilea operand
+                TreeNode leftNode = stack.pop();  // scot nod stg, primul operand
                 TreeNode operatorNode = new TreeNode(token);  // creez un nod operator
 
-                operatorNode.left = leftNode;  // leg nodul stang
-                operatorNode.right = rightNode;  // leg nodul drept
+                // leg nodurile stânga și dreapta de nodul operator
+                operatorNode.left = leftNode;
+                operatorNode.right = rightNode;
 
                 stack.push(operatorNode);  // adaug nodul operator la stiva
             }
         }
 
-        // la final, un sg nod in stiva = rad
-        TreeNode root = stack.pop();
+        TreeNode root = stack.pop(); // la final, stiva contine un singur nod: radacina arborelui de expresii
 
-        return evaluateTree(root);  // evaluare arbore pt a obtine rez
+        return evaluateTree(root);  // functie care evalueaza arborele de expresii pt a obtine rez
     }
 
-    // fct recursiva pentru eval arborelui
-    private double evaluateTree(TreeNode node) {
+    private double evaluateTree(TreeNode node) { // fct recursiva pentru eval arborelui
         if (node == null) {
-            return 0;
+            return 0; // caz de baza: nod null
         }
 
-        // numar
-        if (node.left == null && node.right == null) {
-            return Double.parseDouble(node.value);
+        if (node.left == null && node.right == null) { // numar
+            return Double.parseDouble(node.value); // returneaza valoarea numerică
         }
 
         // eval subarborele stg si drt
