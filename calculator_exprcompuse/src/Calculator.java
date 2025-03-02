@@ -68,8 +68,6 @@ public class Calculator extends JFrame {
                 }
             });
         }
-
-
         for (int i = 0; i < 8; i++) { // 8 operatori
             int finalI = i;
             operators[i].addActionListener(new ActionListener() {
