@@ -116,27 +116,28 @@ public class Calculator extends JFrame {
 
             if (Character.isDigit(c)) { // daca e cifra -> il adaug la currentNum
                 currentNum.append(c);
-            } else {
-                if (currentNum.length() > 0) { // currentNum nu este gol -> adaug numarul la postfix
+            } 
+            else {
+                if (currentNum.length() > 0) { // currentNum nu este gol -> adaug numarul din currentNum la expresia postfix
                     postfix.append(currentNum.toString()).append(" ");  // spatiu pentru delimitare
-                    currentNum.setLength(0);  // reset currentNum
+                    currentNum.setLength(0);  // reset currentNum pt viitoarele numere
                 }
 
                 if (c == '+' || c == '-' || c == '*' || c == '/') { // operator
-                    while (!operators.isEmpty() && precedence(operators.peek()) >= precedence(c)) { // scot operatorii cu prioritate mai mare sau egala din stiva
+                    while (!operators.isEmpty() && precedence(operators.peek()) >= precedence(c)) { // scot operatorii cu prioritate mai mare sau egala din stiva si le adaug la expresia postfix
                         postfix.append(operators.pop()).append(" ");
                     }
                     operators.push(c);    // adaug operatorul curent in stiva
                 }
-                else if (c == '(') {  // paranteza deschisa
-                    operators.push(c);
-                }
-                else if (c == ')') {  // paranteza inchisa
-                    while (!operators.isEmpty() && operators.peek() != '(') { // scot toti operatorii pana la paranteza deschisa
-                        postfix.append(operators.pop()).append(" ");
+                    else if (c == '(') {  // paranteza deschisa
+                        operators.push(c);
                     }
-                    operators.pop();  // scot '(' din stiva
-                }
+                        else if (c == ')') {  // paranteza inchisa
+                            while (!operators.isEmpty() && operators.peek() != '(') { // scot toti operatorii pana la paranteza deschisa
+                                        postfix.append(operators.pop()).append(" ");
+                                    }
+                            operators.pop();  // scot '(' din stiva
+                        }
             }
         }
 
@@ -165,7 +166,7 @@ public class Calculator extends JFrame {
         String[] tokens = postfix.split("\\s+");  // se imparte expresia in tokenuri (numere si operatori), folosind split("\\s+"), care separa expresia după spatii
         Stack<TreeNode> stack = new Stack<>(); // stiva pentru a construi arborele de expresii
 
-        for (String token : tokens) {
+        for (String token : tokens) { // for each
             if (token.matches("\\d+")) {  // numar
                 stack.push(new TreeNode(token));  // creez un nod cu val numarului in stiva
             }
