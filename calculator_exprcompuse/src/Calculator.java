@@ -77,7 +77,7 @@ public class Calculator extends JFrame {
                     if (finalI == 4) {  // "=" evalueaza expresia
                         try {
                             String expression = area.getText();
-                            double result = evaluateExpression(expression);    // fct pt evaluarea expresiei postfixate
+                            double result = evalExpr(expression);    // fct pt evaluarea expresiei postfixate
                             area.setText("= " + result);  // afiseaza rezultatul
                         } catch (Exception ex) {
                             area.setText("Probleme"); // nu suporta numere negative direct in expresii si nu gestioneaza erori de sintaxa
@@ -100,13 +100,13 @@ public class Calculator extends JFrame {
         }
     }
 
-    private double evaluateExpression(String expression) {
-        String postfix = infixToPostfix(expression); // fct care face conversia unei expresii infixate in una postfixata, deoarece e mai usor sa evaluez o expresie postfixata
+    private double evalExpr(String expr) {
+        String postfix = inToPost(expr); // fct care face conversia unei expresii infixate in una postfixata, deoarece e mai usor sa evaluez o expresie postfixata
 
-        return evaluatePostfix(postfix);    // fct care evalueaza expresie postfix
+        return evalPostFix(postfix);    // fct care evalueaza expresie postfix
     }
 
-    private String infixToPostfix(String infix) {
+    private String inToPost(String infix) {
         StringBuilder postfix = new StringBuilder();    // construieste expresia postfix
         Stack<Character> operators = new Stack<>();    // stiva pentru operatori si paranteze
         StringBuilder num = new StringBuilder();  // construieste numerele cu mai multe cifre
@@ -162,7 +162,7 @@ public class Calculator extends JFrame {
     }
 
 
-    private double evaluatePostfix(String postfix) { // evaluare expresie postfixata
+    private double evalPostFix(String postfix) { // evaluare expresie postfixata
         String[] tokens = postfix.split("\\s+");  // se imparte expresia in tokenuri (numere si operatori), folosind split("\\s+"), care separa expresia după spatii
         Stack<Node> stack = new Stack<>(); // stiva pentru a construi arborele de expresii
 
@@ -185,10 +185,10 @@ public class Calculator extends JFrame {
 
         Node root = stack.pop(); // la final, stiva contine un singur nod: radacina arborelui de expresii
 
-        return evaluateTree(root);  // functie care evalueaza arborele de expresii pt a obtine rez
+        return evalTree(root);  // functie care evalueaza arborele de expresii pt a obtine rez
     }
 
-    private double evaluateTree(Node node) { // fct recursiva pentru eval arborelui
+    private double evalTree(Node node) { // fct recursiva pentru eval arborelui
         if (node == null) {
             return 0; // caz de baza: nod null
         }
@@ -198,8 +198,8 @@ public class Calculator extends JFrame {
         }
 
         // eval subarborele stg si drt
-        double leftValue = evaluateTree(node.left);
-        double rightValue = evaluateTree(node.right);
+        double leftValue = evalTree(node.left);
+        double rightValue = evalTree(node.right);
 
         // aplica operatorul corespunzator
         switch (node.value) {
