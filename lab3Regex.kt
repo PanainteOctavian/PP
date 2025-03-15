@@ -24,3 +24,11 @@ fun main() {
     string = string.replace(numarPagina, "")
     println(string)
 }
+/* input.txt
+A fost odata  ca-n povesti
+A fost ca niciodata
+Pagina 1
+Din rude mari  imparatesti
+O prea frumoasa fata
+Pagina 2
+*/
