@@ -1,7 +1,7 @@
 import java.io.*
 
 fun main() {
-    val bufferedReader: BufferedReader = File("G:\\My Drive\\Materiale\\AN2\\SEM2\\PP\\L\\Lab meu\\lab3\\tema2\\src\\input.txt").bufferedReader()
+    val bufferedReader: BufferedReader = File("input.txt").bufferedReader()
     var string = bufferedReader.use { it.readText() }
 
     println("Exemplu:\n" + string)
