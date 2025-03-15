@@ -1,6 +1,9 @@
+import java.io.*
+
 fun main() {
-    var string =    "A fost odata  ca-n povesti\n" + "A fost ca niciodata\n" + "\t\t\t\t\t\t 1\n" +
-                    "Din rude mari  imparatesti\n" + "O prea frumoasa fata\n" + "\t\t\t\t\t\t 2"
+    val bufferedReader: BufferedReader = File("G:\\My Drive\\Materiale\\AN2\\SEM2\\PP\\L\\Lab meu\\lab3\\tema2\\src\\input.txt").bufferedReader()
+    var string = bufferedReader.use { it.readText() }
+
     println("Exemplu:\n" + string)
     println("-".repeat(100))
 
@@ -8,7 +11,7 @@ fun main() {
     println("Fara spatii multiple:\n${spatiiMultiple.replace(string, " ")}")
     println("-".repeat(100))
 
-    val saltLaLinieNoua = Regex("\n")
+    val saltLaLinieNoua = Regex("\r\n")
     println("Fara salt la linie noua:\n${saltLaLinieNoua.replace(string, " ")}")
     println("-".repeat(100))
 
