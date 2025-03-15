@@ -4,7 +4,6 @@ class BankAccount {
     private val expirationDate: Date
     private val cvvCode: Int
     private val userName: String
-    var cardPayments: Array<CardPayment> = emptyArray()
 
     constructor() {
         availableAmount = -1.0
