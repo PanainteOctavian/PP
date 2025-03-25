@@ -2,7 +2,7 @@ import java.io.File
 
 class NotesManager(private val notesDirectory: String) {
     init {
-        File(notesDirectory).mkdirs()
+        File(notesDirectory).mkdirs() // creeaza directorul pt notite
     }
 
     fun displayNotes() {
@@ -12,11 +12,11 @@ class NotesManager(private val notesDirectory: String) {
         }
         else {
             println("Notite: ")
-            files.forEachIndexed { index, file -> println("${index + 1}. ${file.nameWithoutExtension}") }
+            files.forEachIndexed { index, file -> println("${index + 1}. ${file.nameWithoutExtension}") } // index de la 1 pt utilizator
         }
     }
 
-    fun loadNote(index: Int): Note? {
+    fun loadNote(index: Int): Note? { // returneaza Note sau null
         val files = File(notesDirectory).listFiles()
         if (files.isNullOrEmpty() || index < 0 || index >= files.size) {
             println("Index invalid.")
@@ -32,9 +32,9 @@ class NotesManager(private val notesDirectory: String) {
     }
 
     fun createNote(note: Note) {
-        val fileName = "${note.author}_${note.date}_${note.time}.txt"
-        val file = File("$notesDirectory/$fileName")
-        file.writeText("${note.author}\n${note.date}\n${note.time}\n${note.content}")
+        val fileName = "${note.author}_${note.date}_${note.time}.txt" // concatenare nume fisier
+        val file = File("$notesDirectory/$fileName") // cale fisier
+        file.writeText("${note.author}\n${note.date}\n${note.time}\n${note.content}") // scrie notitia in fisier
         println("Notita creata cu succes.")
     }
 
