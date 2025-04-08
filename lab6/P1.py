@@ -1,4 +1,3 @@
-import math
 import os
 from typing import List, Dict, Union
 import chardet  # detectarea encoding-ului fisierelor
@@ -61,7 +60,7 @@ class BMP(Binary):
     def show_info(self) -> None:
         print("Width:{}\nHeight: {}\nBPP: {}\n".format(self.width, self.height, self.bpp))
 
-def calc_frecvente(content: bytes) -> Dict[int, int]:
+def calc_frecvente(content: bytes):
     frecvente = {}
     for byte in content:
         frecvente[byte] = frecvente.get(byte, 0) + 1
@@ -106,7 +105,7 @@ def read_files_in_directory(directory: str) -> List[Union[TextASCII, TextUNICODE
 
                     if encoding in ['UTF-16', 'UTF-16LE', 'UTF-16BE']: # UNICODE
                         result.append(TextUNICODE(filepath, frecvente))
-                    elif ratio > 0.8:  # ASCII pt >80%
+                    elif ratio > 0.8:  # ASCII pt >80% caractere printabile
                         result.append(TextASCII(filepath, frecvente))
                     else: # Binary
                         result.append(Binary(filepath, frecvente))
@@ -122,11 +121,15 @@ if __name__ == "__main__":
     directory = input("PATH: ")
     print(" ")
     for it in read_files_in_directory(directory):
-        if type(it) is BMP:
+        if isinstance(it, BMP):
             print("BMP: {}, \nDimensiuni: ".format(it.get_path()))
             it.show_info()
-            print("\n")
-        elif type(it) is XMLFile:
-            print("XML: {}".format(it.get_path()) + "\n")
-        elif type(it) is TextUNICODE:
-            print("UNICODE: {}".format(it.get_path()) + "\n")
+        elif isinstance(it, XMLFile):
+            print("XML: {}".format(it.get_path()))
+        elif isinstance(it, TextUNICODE):
+            print("UNICODE: {}".format(it.get_path()))
+        elif isinstance(it, TextASCII):
+            print("ASCII: {}".format(it.get_path()))
+        elif isinstance(it, Binary):
+            print("Binary: {}".format(it.get_path()))
+        print()
