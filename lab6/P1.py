@@ -84,7 +84,7 @@ def read_files_in_directory(directory: str) -> List[Union[TextASCII, TextUNICODE
                 frecvente = calc_frecvente(content)
                 encoding = chardet.detect(content)['encoding']
 
-                # BMP (magic number 'BM')
+                # BMP (primii 2 biti = 'BM')
                 if content[:2] == b'BM':
                     width = int.from_bytes(content[18:22], 'little')
                     height = int.from_bytes(content[22:26], 'little')
