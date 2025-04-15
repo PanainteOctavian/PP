@@ -56,7 +56,7 @@ fun <T : Comparable<T>> findMax(a: T, b: T): T {
 }
 
 // fct generica care cauta si inlocuieste prin covarianta(out)
-fun <T> searchAndReplaceSimple(searchFor: T, replaceWith: T, collection: MutableMap<out Any, T>) {
+fun <T> searchAndReplace(searchFor: T, replaceWith: T, collection: MutableMap<out Any, T>) {
     for ((key, value) in collection) {
         if (value == searchFor) {
             (collection as MutableMap<Any, T>)[key] = replaceWith
