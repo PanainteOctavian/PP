@@ -77,8 +77,7 @@ fun main() {
         .withInput(true)
         .build()
 
-
-    // builder pentru poarta cu 8 intrări:
+    // poarta cu 8 intrari
     val gate8Inputs = AndGateBuilder.create(andImplementation)
         .withInput(true).withInput(true).withInput(true).withInput(true)
         .withInput(true).withInput(true).withInput(true).withInput(false)
